@@ -11,8 +11,6 @@ include_directories(
   ${PCL_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS})
 
-add_definitions(-std=c++1y -g -Wall -O2 -fPIC)
-
 add_library(perception SHARED
   src/perception.cc
   src/point_cloud_fusion.cc
