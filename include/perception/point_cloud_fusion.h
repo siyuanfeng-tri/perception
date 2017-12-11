@@ -12,7 +12,7 @@ class PointCloudFusion {
 public:
   PointCloudFusion(
       std::function<Eigen::Vector2f(const Eigen::Vector3f &)> proj_func,
-      float resolution);
+      float resolution = 0.002);
 
   void Init();
 
