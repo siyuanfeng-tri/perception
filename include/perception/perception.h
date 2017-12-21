@@ -191,7 +191,6 @@ typename pcl::PointCloud<T>::Ptr SubtractTable(
   // Get rid of the table.
   pcl::PointIndices::Ptr inliers = boost::make_shared<pcl::PointIndices>();
   Eigen::Vector4d param = FindPlane<T>(cloud, inliers, thickness);
-  std::cout << param.transpose() << "\n";
   if (std::fabs(param[2]) < 0.95) {
     inliers->indices.clear();
   }
