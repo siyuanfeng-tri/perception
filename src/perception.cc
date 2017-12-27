@@ -8,6 +8,17 @@ template void LoadPCDFile<pcl::PointXYZRGB>(
     const std::string &file_name,
     typename pcl::PointCloud<pcl::PointXYZRGB>::Ptr &cloud);
 
+template std::vector<pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr>
+SplitIntoClusters<pcl::PointXYZRGBNormal>(
+    const pcl::PointCloud<pcl::PointXYZRGBNormal>::ConstPtr &input,
+    double dist_thresh,
+    int min_size, int max_size);
+template std::vector<pcl::PointCloud<pcl::PointXYZRGB>::Ptr>
+SplitIntoClusters<pcl::PointXYZRGB>(
+    const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr &input,
+    double dist_thresh,
+    int min_size, int max_size);
+
 template pcl::PointCloud<pcl::PointXYZRGB>::Ptr DownSample<pcl::PointXYZRGB>(
     const pcl::PointCloud<pcl::PointXYZRGB>::ConstPtr &cloud, double leaf_size);
 template pcl::PointCloud<pcl::PointXYZRGBNormal>::Ptr

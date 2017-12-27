@@ -17,6 +17,7 @@
 #include <pcl/registration/icp.h>
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/segmentation/extract_clusters.h>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/opencv.hpp>
@@ -51,6 +52,40 @@ void LoadPCDFile(const std::string &file_name,
   reader.read<T>(file_name, *cloud);
   std::vector<int> indices;
   pcl::removeNaNFromPointCloud(*cloud, *cloud, indices);
+}
+
+template <typename T>
+std::vector<typename pcl::PointCloud<T>::Ptr> SplitIntoClusters(
+    const typename pcl::PointCloud<T>::ConstPtr &input,
+    double dist_thresh,
+    int min_size, int max_size) {
+  typename pcl::search::KdTree<T>::Ptr tree =
+      boost::make_shared<pcl::search::KdTree<T>>();
+  tree->setInputCloud(input);
+
+  std::vector<pcl::PointIndices> cluster_indices;
+  pcl::EuclideanClusterExtraction<T> ec;
+  ec.setClusterTolerance(dist_thresh);
+  ec.setMinClusterSize(min_size);
+  ec.setSearchMethod(tree);
+  ec.setInputCloud(input);
+  ec.extract(cluster_indices);
+
+  std::vector<typename pcl::PointCloud<T>::Ptr> clusters(
+      cluster_indices.size());
+  int ctr = 0;
+  for (const auto &indices : cluster_indices) {
+    clusters[ctr] =
+        boost::make_shared<typename pcl::PointCloud<T>>();
+    for (int i : indices.indices) {
+      clusters[ctr]->points.push_back(input->points[i]);
+    }
+    clusters[ctr]->width = clusters[ctr]->points.size();
+    clusters[ctr]->height = 1;
+    clusters[ctr]->is_dense = true;
+  }
+
+  return clusters;
 }
 
 template <typename T>
